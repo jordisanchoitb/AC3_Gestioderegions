@@ -231,7 +231,7 @@ namespace AC3_Gestioderegions
             {
                 AnyProvider.SetError(cmbBoxAny, "L'any no esta dins de les opcions");
                 e.Cancel = true;
-            }
+            } 
             else
             {
                 AnyProvider.SetError(cmbBoxAny, "");
@@ -270,6 +270,11 @@ namespace AC3_Gestioderegions
                 PoblacioProvider.SetError(txtBoxPoblacio, "El camp poblacio no pot contenir lletres");
                 e.Cancel = true;
             }
+            else if (!IsGreaterAndEqualThanZero(txtBoxPoblacio.Text))
+            {
+                PoblacioProvider.SetError(txtBoxPoblacio, "El camp poblacio no pot ser negatiu");
+                e.Cancel = true;
+            }
             else
             {
                 PoblacioProvider.SetError(txtBoxPoblacio, "");
@@ -287,6 +292,11 @@ namespace AC3_Gestioderegions
             else if (!IsNumber(txtBoxDomesticXarxa.Text))
             {
                 DomesticXarxaProvider.SetError(txtBoxDomesticXarxa, "El camp domestic xarxa no pot contenir lletres");
+                e.Cancel = true;
+            }
+            else if (!IsGreaterAndEqualThanZero(txtBoxDomesticXarxa.Text))
+            {
+                DomesticXarxaProvider.SetError(txtBoxDomesticXarxa, "El camp domestic xarxa no pot ser negatiu");
                 e.Cancel = true;
             }
             else
@@ -308,6 +318,11 @@ namespace AC3_Gestioderegions
                 ActEcoProvider.SetError(txtBoxActEconomiques, "El camp activitats economiques no pot contenir lletres");
                 e.Cancel = true;
             }
+            else if (!IsGreaterAndEqualThanZero(txtBoxActEconomiques.Text))
+            {
+                ActEcoProvider.SetError(txtBoxActEconomiques, "El camp activitats economiques no pot ser negatiu");
+                e.Cancel = true;
+            }
             else
             {
                 ActEcoProvider.SetError(txtBoxActEconomiques, "");
@@ -325,6 +340,11 @@ namespace AC3_Gestioderegions
             else if (!IsNumber(txtBoxConsumDomestic.Text))
             {
                 ConsumDomesticProvider.SetError(txtBoxConsumDomestic, "El camp consum domestic no pot contenir lletres");
+                e.Cancel = true;
+            }
+            else if (!IsGreaterAndEqualThanZero(txtBoxConsumDomestic.Text))
+            {
+                ConsumDomesticProvider.SetError(txtBoxConsumDomestic, "El camp consum domestic no pot ser negatiu");
                 e.Cancel = true;
             }
             else
@@ -346,6 +366,11 @@ namespace AC3_Gestioderegions
                 TotalProvider.SetError(txtBoxTotal, "El camp total no pot contenir lletres");
                 e.Cancel = true;
             }
+            else if (!IsGreaterAndEqualThanZero(txtBoxTotal.Text))
+            {
+                TotalProvider.SetError(txtBoxTotal, "El camp total no pot ser negatiu");
+                e.Cancel = true;
+            }
             else
             {
                 TotalProvider.SetError(txtBoxTotal, "");
@@ -356,6 +381,11 @@ namespace AC3_Gestioderegions
         private bool IsNumber(string text)
         {
             return double.TryParse(text, out _);
+        }
+
+        private bool IsGreaterAndEqualThanZero(string text)
+        {
+            return double.Parse(text) >= 0;
         }
 
         private void btnPaginaAnterior_Click(object sender, EventArgs e)
