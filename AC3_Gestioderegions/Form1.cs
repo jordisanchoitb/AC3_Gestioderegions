@@ -13,8 +13,12 @@ namespace AC3_Gestioderegions
         public static CSVHandler csvhandler = new CSVHandler(csvPath);
         public static XMLHandler xmlhandler = new XMLHandler(xmlPath);
 
-        private static List<int> Anys = new List<int>();
-        private static List<string> Comarques = new List<string>();
+        private int tamañoPagina = 10;
+        private int paginaActual = 1;
+
+        private List<int> Anys = new List<int>();
+        private List<string> Comarques = new List<string>();
+        private List<Comarca> comarquescsv;
         public Form1()
         {
             InitializeComponent();
@@ -50,15 +54,11 @@ namespace AC3_Gestioderegions
             // Estiguin tots els arxius actualitzats/creats
             CreateAndUpdateXML();
 
+            // Llegir dades
+            comarquescsv = csvhandler.ReadAllCsv();
+
             // Carregar dades
-            List<Comarca> comarquescsv = csvhandler.ReadAllCsv();
-            dgv_Comarcas.DataSource = comarquescsv;
-            dgv_Comarcas.Columns[1].Visible = false;
-            dgv_Comarcas.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dgv_Comarcas.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dgv_Comarcas.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            dgv_Comarcas.Columns[6].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            
+            MostraDadesEnElDataGridView();
 
             // Carregar anys
             var anyantic = comarquescsv.Min(x => x.Any);
@@ -68,7 +68,7 @@ namespace AC3_Gestioderegions
             {
                 anys.Add(i);
             }
-            Form1.Anys = anys;
+            Anys = anys;
             cmbBoxAny.DataSource = anys;
             cmbBoxAny.SelectedIndex = -1;
 
@@ -79,10 +79,28 @@ namespace AC3_Gestioderegions
                              orderby Convert.ToInt32(comarca.Element("Codi").Value)
                              select $"{comarca.Element("Nom").Value.ToUpper()}").Distinct();
 
-            Form1.Comarques = comarques.ToList();
+            Comarques = comarques.ToList();
             cmbBoxComarca.DataSource = comarques.ToList();
             cmbBoxComarca.SelectedIndex = -1;
 
+        }
+
+        private void MostraDadesEnElDataGridView()
+        {
+            dgv_Comarcas.DataSource = ObtindreDadesPaginades();
+            dgv_Comarcas.Columns[1].Visible = false;
+            dgv_Comarcas.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dgv_Comarcas.Columns[3].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dgv_Comarcas.Columns[4].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            dgv_Comarcas.Columns[6].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+        }
+
+        private List<Comarca> ObtindreDadesPaginades()
+        {
+            int indexInici = (paginaActual - 1) * tamañoPagina;
+            int indexFinal = Math.Min(indexInici + tamañoPagina, comarquescsv.Count);
+
+            return comarquescsv.GetRange(indexInici, indexFinal - indexInici);
         }
 
         private void bttonSave_Click(object sender, EventArgs e)
@@ -118,8 +136,9 @@ namespace AC3_Gestioderegions
 
                 CreateAndUpdateXML();
 
-                List<Comarca> comarquescsv = csvhandler.ReadAllCsv();
-                dgv_Comarcas.DataSource = comarquescsv;
+                comarquescsv = csvhandler.ReadAllCsv();
+
+                MostraDadesEnElDataGridView();
 
                 ClearForm();
 
@@ -208,7 +227,7 @@ namespace AC3_Gestioderegions
                 AnyProvider.SetError(cmbBoxAny, "El camp any no pot estar buit");
                 e.Cancel = true;
             }
-            else if (!Form1.Anys.Contains(Int32.Parse(cmbBoxAny.Text)))
+            else if (!Anys.Contains(Int32.Parse(cmbBoxAny.Text)))
             {
                 AnyProvider.SetError(cmbBoxAny, "L'any no esta dins de les opcions");
                 e.Cancel = true;
@@ -227,7 +246,7 @@ namespace AC3_Gestioderegions
                 ComarcaProvider.SetError(cmbBoxComarca, "El camp comarca no pot estar buit");
                 e.Cancel = true;
             }
-            else if (!Form1.Comarques.Contains(cmbBoxComarca.Text))
+            else if (!Comarques.Contains(cmbBoxComarca.Text))
             {
                 ComarcaProvider.SetError(cmbBoxComarca, "La comarca no esta dins de les opcions");
                 e.Cancel = true;
@@ -337,6 +356,25 @@ namespace AC3_Gestioderegions
         private bool IsNumber(string text)
         {
             return double.TryParse(text, out _);
+        }
+
+        private void btnPaginaAnterior_Click(object sender, EventArgs e)
+        {
+            if (paginaActual > 1)
+            {
+                paginaActual--;
+                MostraDadesEnElDataGridView();
+            }
+        }
+
+        private void btnPaginaSeguent_Click(object sender, EventArgs e)
+        {
+            int totalPaginas = (int)Math.Ceiling((double)comarquescsv.Count / tamañoPagina);
+            if (paginaActual < totalPaginas)
+            {
+                paginaActual++;
+                MostraDadesEnElDataGridView();
+            }
         }
     }
 }

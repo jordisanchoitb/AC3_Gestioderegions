@@ -66,6 +66,8 @@ namespace AC3_Gestioderegions
             ActEcoProvider = new ErrorProvider(components);
             ConsumDomesticProvider = new ErrorProvider(components);
             TotalProvider = new ErrorProvider(components);
+            btnPaginaAnterior = new Button();
+            btnPaginaSeguent = new Button();
             grpBoxDades.SuspendLayout();
             grpBoxStats.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgv_Comarcas).BeginInit();
@@ -331,7 +333,7 @@ namespace AC3_Gestioderegions
             // 
             // bttonSave
             // 
-            bttonSave.Location = new Point(529, 240);
+            bttonSave.Location = new Point(530, 230);
             bttonSave.Name = "bttonSave";
             bttonSave.Size = new Size(84, 28);
             bttonSave.TabIndex = 2;
@@ -341,7 +343,7 @@ namespace AC3_Gestioderegions
             // 
             // bttonClear
             // 
-            bttonClear.Location = new Point(429, 240);
+            bttonClear.Location = new Point(430, 230);
             bttonClear.Name = "bttonClear";
             bttonClear.Size = new Size(84, 28);
             bttonClear.TabIndex = 3;
@@ -359,7 +361,7 @@ namespace AC3_Gestioderegions
             dgv_Comarcas.Location = new Point(12, 299);
             dgv_Comarcas.Name = "dgv_Comarcas";
             dgv_Comarcas.ReadOnly = true;
-            dgv_Comarcas.Size = new Size(912, 175);
+            dgv_Comarcas.Size = new Size(912, 274);
             dgv_Comarcas.TabIndex = 4;
             dgv_Comarcas.CellClick += dgv_Comarcas_CellClick;
             // 
@@ -395,12 +397,34 @@ namespace AC3_Gestioderegions
             // 
             TotalProvider.ContainerControl = this;
             // 
+            // btnPaginaAnterior
+            // 
+            btnPaginaAnterior.Location = new Point(395, 274);
+            btnPaginaAnterior.Name = "btnPaginaAnterior";
+            btnPaginaAnterior.Size = new Size(45, 23);
+            btnPaginaAnterior.TabIndex = 5;
+            btnPaginaAnterior.Text = "<--";
+            btnPaginaAnterior.UseVisualStyleBackColor = true;
+            btnPaginaAnterior.Click += btnPaginaAnterior_Click;
+            // 
+            // btnPaginaSeguent
+            // 
+            btnPaginaSeguent.Location = new Point(446, 274);
+            btnPaginaSeguent.Name = "btnPaginaSeguent";
+            btnPaginaSeguent.Size = new Size(45, 23);
+            btnPaginaSeguent.TabIndex = 6;
+            btnPaginaSeguent.Text = "-->";
+            btnPaginaSeguent.UseVisualStyleBackColor = true;
+            btnPaginaSeguent.Click += btnPaginaSeguent_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoValidate = AutoValidate.Disable;
-            ClientSize = new Size(935, 482);
+            ClientSize = new Size(935, 583);
+            Controls.Add(btnPaginaSeguent);
+            Controls.Add(btnPaginaAnterior);
             Controls.Add(dgv_Comarcas);
             Controls.Add(bttonClear);
             Controls.Add(bttonSave);
@@ -461,5 +485,7 @@ namespace AC3_Gestioderegions
         private ErrorProvider ActEcoProvider;
         private ErrorProvider ConsumDomesticProvider;
         private ErrorProvider TotalProvider;
+        private Button btnPaginaSeguent;
+        private Button btnPaginaAnterior;
     }
 }
